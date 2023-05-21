@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: "manrope";
+    src: url("static/fonts/Manrope-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "manrope";
+    src: url("static/fonts/Manrope-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+}
+
+@layer base {
+    :root,
+    html,
+    body {
+        @apply flex flex-col w-full h-full;
+        @apply bg-zinc-950 text-white;
+        font-family: "manrope", sans-serif;
+    }
+
+    input,
+    input:focus input:active {
+        @apply outline-0 ring-0;
+    }
+
+    progress {
+        @apply block w-full h-2;
+    }
+    progress[value]::-webkit-progress-value {
+        @apply bg-emerald-600;
+    }
+    progress[value]::-webkit-progress-bar {
+        @apply bg-zinc-900;
+    }
+
+    ::-webkit-scrollbar {
+        width: 16px;
+    }
+
+    ::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 8px 8px rgb(39 39 42);
+        border-left: solid 8px transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        box-shadow: inset 0 0 8px 8px #059669;
+        border-left: solid 8px transparent;
+    }
+}
+
+@layer components {
+    .area {
+        @apply rounded-xl bg-zinc-900;
+    }
+}
