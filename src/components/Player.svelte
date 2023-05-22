@@ -83,14 +83,17 @@
     events.addEventListener("open", () => {
         events.addEventListener("message", (event) => {
             const data = JSON.parse(event.data)
+
             if(data.state == "pause") {
                 playing = false
                 track = data.track
             }
+
             if(data.state == "start" || data.state == "resume") {
                 playing = true
                 track = data.track                
             }
+            
             if(data.state == "finish") {
                 playing = false
                 track = null

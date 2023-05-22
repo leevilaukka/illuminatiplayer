@@ -1,17 +1,7 @@
 <script lang="ts">
     import { postControl } from "@lib/api";
 
-    export let progress = {
-        total: {
-            value: 0,
-            label: "0:00"
-        },
-        current: {
-            value: 0,
-            label: "0:00"
-        },
-        progress: 0
-    }
+    export let progress = null
 
     const handleSeek = (e) => {
         const songLength = progress.total.value
@@ -30,12 +20,12 @@
 
 </script>
 
-<div class="flex w-full items-center gap-4">
-    <p>{progress.current.label}</p>
-    <div class="h-2 w-full rounded-full overflow-clip">
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <progress on:click={handleSeek} max=100 value={progress.progress}>
-        </progress>
+    <div class="flex w-full items-center gap-4">
+        <p>{progress?.current.label || "0:00"}</p>
+        <div class="h-2 w-full rounded-full overflow-clip">
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <progress on:click={handleSeek} max=100 value={progress?.progress || 0}>
+            </progress>
+        </div>
+        <p>{progress?.total.label || "00:00"}</p>
     </div>
-    <p>{progress.total.label}</p>
-</div>

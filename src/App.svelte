@@ -22,7 +22,7 @@
 <div class="grid grid-cols-[auto_30%] grid-rows-1 gap-6 grid-cols-2 p-6 h-full">
     <div class="area flex flex-col h-full p-4 gap-4">
         <Search />
-        <Queue {queue} {debug} {voiceChannels} {playing}/>
+        <Queue {queue} {debug} {voiceChannels} {playing} {track}/>
     </div>
     <div class="area flex flex-col h-full overflow-clip p-4 gap-4">
         {#if channel}

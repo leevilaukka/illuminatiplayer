@@ -7,6 +7,7 @@
     export let debug: Debug = null
     export let voiceChannels = []
     export let playing = false;
+    export let track = null;
     
     let showDebug = false
     let dragFrom = null
@@ -141,7 +142,7 @@
     {:else}
     <div class="m-auto text-center">
         <p>The queue is empty!</p>
-        {#if !playing}
+        {#if !playing && !track}
             <p>Select a channel below and add a song to start playing!</p>
             <select name="channel" class="w-full mt-2 p-2.5 rounded-s bg-zinc-800 block" id="" on:change={handleChannelSelect}>
                 <option value="" selected disabled>Select a channel</option>
