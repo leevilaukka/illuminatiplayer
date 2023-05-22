@@ -4,8 +4,6 @@
     export let track: Track = null
 </script>
 
-
-
 <div class="flex flex-col flex-auto gap-4">
     {#if track}
             <div class="aspect-square w-full bg-zinc-900 rounded overflow-clip">
@@ -14,6 +12,6 @@
             <h2 class="text-xl font-bold">{track.title}</h2>
             <p class="text-zinc-400">{track.author}</p>
     {:else}
-        <p class="m-auto">Soita jotain saatana!</p>
+        <p class="m-auto">Nothing playing!</p>
     {/if}
 </div>

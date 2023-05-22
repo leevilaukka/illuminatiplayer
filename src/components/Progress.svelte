@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { postSeek } from "@lib/api";
+    import { postControl } from "@lib/api";
 
     export let progress = {
         total: {
@@ -25,7 +25,7 @@
         const seconds = (songLength / 100) * percentage
 
         // Seek to the position
-        postSeek(Math.floor(seconds))
+        postControl("seek", Math.floor(seconds))
     }
 
 </script>

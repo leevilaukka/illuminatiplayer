@@ -1,7 +1,7 @@
 <svelte:options accessors={true} />
 
 <script lang="ts">
-    import { postControl, postPrevious, getGuildID, getCurrentlyPlaying, postVolume, postSeek, setChannelID, getEvents  } from "@lib/api";
+    import { postControl, postPrevious, getCurrentlyPlaying, postVolume, setChannelID, getEvents  } from "@lib/api";
     import Progress from "./Progress.svelte";
     import { createEventDispatcher } from "svelte"
     import Icon from "./Icon.svelte";

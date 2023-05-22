@@ -139,17 +139,24 @@
             </table>
         </div>
     {:else}
-        <p class="m-auto">Jono tyhjä!</p>
+    <div class="m-auto text-center">
+        <p>The queue is empty!</p>
+        {#if !playing}
+            <p>Select a channel below and add a song to start playing!</p>
+            <select name="channel" class="w-full mt-2 p-2.5 rounded-s bg-zinc-800 block" id="" on:change={handleChannelSelect}>
+                <option value="" selected disabled>Select a channel</option>
+                {#each voiceChannels as channel}
+                    <option value={channel.id}>{channel.name}</option>
+                {/each}
+            </select>
+            {:else}
+            <p>Use the search bar to add a song to the queue!</p>
+        {/if}
+    </div>
+       
     {/if}
     
-    {#if !playing && queue.length === 0}
-        <select name="channel" class="w-full px-3 py-1 rounded-s bg-zinc-800" id="" on:change={handleChannelSelect}>
-            <option value="" selected disabled>Select a channel</option>
-            {#each voiceChannels as channel}
-                <option value={channel.id}>{channel.name}</option>
-            {/each}
-        </select>
-    {/if}
+    
 
     {#if showDebug && debug}
             <Debug {debug} />
@@ -161,7 +168,7 @@
         <button on:click={handleClear} title="Clear Queue" class="flex items-center gap-2 whitespace-nowrap px-3 py-1 rounded bg-zinc-800"><Icon name="trash" /> Clear</button>
         <button on:click={() => showDebug = !showDebug} class="flex ml-auto items-center gap-2 whitespace-nowrap px-3 py-1 rounded bg-zinc-800"><Icon name="activity"/>Debug</button>
         {#if queue.length > 0}
-            <p class="flex items-center gap-2 whitespace-nowrap px-3 py-1 rounded bg-zinc-800" title="{getTotalDuration()}">{queue.length} songs</p>
+            <p class="flex items-center gap-2 whitespace-nowrap px-3 py-1 rounded bg-zinc-800" title="{getTotalDuration()}">{queue.length} {queue.length === 1 ? "song": "songs"}</p>
         {/if}
         <Debug  />
     </div>

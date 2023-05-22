@@ -3,8 +3,7 @@
     import Track from "@components/Track.svelte";
     import Queue from "@components/Queue.svelte";
     import Search from "@components/Search.svelte";
-    import { setContext } from "svelte";
-    import { getChannels, getDiscordGuilds, getDiscordUser, getGuilds, getIlluminatiUser, setGuildID } from "@lib/api";
+    import { getChannels, setGuildID } from "@lib/api";
 
     let track = null
     let queue = []

@@ -145,11 +145,12 @@ export async function getQueue() {
     return await response.json();
 }
 
-export async function postControl(action: string) {
+export async function postControl(action: string, data?: any) {
     const url = getURL(`/music/controls/${get(GUILD_ID)}`);
 
     const body = {
-        action: action.toLowerCase(),
+        action,
+        data,
     };
 
     const options = {
@@ -295,24 +296,6 @@ export async function postMove(from: number, to: number) {
             guildID: get(GUILD_ID),
             from,
             to,
-        }),
-    };
-
-    const response = await fetch(url, options);
-    return await response.json();
-}
-
-export async function postSeek(position: number) {
-    const url = getURL(`/music/seek/`);
-    const options = {
-        method: "POST",
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            guildID: get(GUILD_ID),
-            position,
         }),
     };
 
