@@ -336,6 +336,25 @@ export async function postVolume(volume: number) {
     return await response.json();
 }
 
+export async function postSave() {
+    const url = getURL(`/music/playlists/save/`);
+
+    const options = {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            guildID: get(GUILD_ID),
+            name: "test",
+        }),
+    };
+
+    const response = await fetch(url, options);
+    return await response.json();
+}
+
 export async function getDiscordUser(token: string) {
     const url = "https://discord.com/api/users/@me";
     const options = {

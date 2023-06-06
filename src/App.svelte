@@ -17,7 +17,10 @@
     getChannels().then(data => {
         voiceChannels = data.voice
     })
+
+    
 </script>
+
 
 <div class="grid grid-cols-[auto_30%] grid-rows-1 gap-6 grid-cols-2 p-6 h-full">
     <div class="area flex flex-col h-full p-4 gap-4">

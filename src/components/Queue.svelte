@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { LoopMode, postClear, postJump, postLoop, postMove, postRemove, postShuffle, postToTop, setChannelID} from "@lib/api";
+    import { LoopMode, postClear, postJump, postLoop, postMove, postRemove, postSave, postShuffle, postToTop, setChannelID} from "@lib/api";
     import Icon from "./Icon.svelte";
     import Debug from "./Debug.svelte";
 
@@ -12,34 +12,15 @@
     let showDebug = false
     let dragFrom = null
     let dragTo = null
-
-    const handlePlay = (_e: MouseEvent, idx: number) => {
-        postJump(idx)
-    }
-
-    const handleRemove = (_e: MouseEvent, idx: number) => {
-        postRemove(idx)
-    }
-
-    const handleToTop = (_e: MouseEvent, idx: number) => {
-        postToTop(idx)
-    }
+    let totalDuration = ""
 
     const handleShuffle = async () => {
         const res = await postShuffle()
         queue = res.queue
     }
 
-    const handleClear = () => {
-        postClear()
-    }
-
     const handleDragStart = (e: DragEvent, idx: number) => {
         dragFrom = idx
-    }
-
-    const handleDragOver = (e: DragEvent) => {
-        e.preventDefault()
     }
 
     const handleDrop = async (e: DragEvent, index: number) => {
@@ -57,7 +38,6 @@
     const handleChannelSelect = (e: Event) => {
         const target = e.target as HTMLSelectElement
         const channelID = target.value
-        console.log(channelID)
         
         setChannelID(channelID)
     }
@@ -103,13 +83,13 @@
                 </thead>
                 <tbody>
                     {#each queue as track, index}
-                        <tr draggable="true" on:dragover={(e) => handleDragOver(e)} on:dragstart={(e) => handleDragStart(e, index)} on:drop={(e) => handleDrop(e, index)} class="bg-zinc-800" title="{track.title} | {track.author}" >
+                        <tr draggable="true" on:dragover={(e) => e.preventDefault()} on:dragstart={(e) => handleDragStart(e, index)} on:drop={(e) => handleDrop(e, index)} class="bg-zinc-800" title="{track.title} | {track.author}" >
                             <td class="text-center rounded-s">
                                 <p class="text-zinc-400">{index + 1}</p>
                             </td>
-                            <td>
+                            <td> 
                                 <div class="flex items-center justify-center">
-                                    <img src="{track.thumbnail}" alt="" class="block w-12 h-12">
+                                    <img src="{track.thumbnail}" alt="" loading="{index >= 20 ? "lazy" : null}" class="block w-12 h-12">
                                 </div>
                             </td>
                             <td>
@@ -123,13 +103,13 @@
                             </td>
                             <td class="rounded-e max-w-max">
                                 <div class="flex flex-row flex-nowrap justify-center gap-4">
-                                    <button title="Play Now" on:click={(e) => handlePlay(e, index)}>
+                                    <button title="Play Now" on:click={() => postJump(index)}>
                                         <Icon name="play" />
                                     </button>
-                                    <button title="Remove from Queue" on:click={(e) => handleRemove(e, index)}>
+                                    <button title="Remove from Queue" on:click={() => postRemove(index)}>
                                         <Icon name="trash" />
                                     </button>
-                                    <button title="Move to Top" on:click={(e) => handleToTop(e, index)}>
+                                    <button title="Move to Top" on:click={() => postToTop(index)}>
                                         <Icon name="chevrons_up" />
                                     </button>
                                 </div>
@@ -154,22 +134,21 @@
             <p>Use the search bar to add a song to the queue!</p>
         {/if}
     </div>
-       
     {/if}
     
-    
-
     {#if showDebug && debug}
-            <Debug {debug} />
+        <Debug {debug} />
     {/if}
     
     <div class="flex flex-row gap-4">
         <button on:click={handleShuffle} title="Shuffle Queue" class="flex items-center gap-2 whitespace-nowrap px-3 py-1 rounded bg-zinc-800"><Icon name="shuffle"/> Shuffle</button>
         <button on:click={handleRepeat} class="flex items-center gap-2 whitespace-nowrap px-3 py-1 rounded bg-zinc-800"><Icon name="repeat" /> Repeat</button>
-        <button on:click={handleClear} title="Clear Queue" class="flex items-center gap-2 whitespace-nowrap px-3 py-1 rounded bg-zinc-800"><Icon name="trash" /> Clear</button>
-        <button on:click={() => showDebug = !showDebug} class="flex ml-auto items-center gap-2 whitespace-nowrap px-3 py-1 rounded bg-zinc-800"><Icon name="activity"/>Debug</button>
+        <button on:click={() => postClear()} title="Clear Queue" class="flex items-center gap-2 whitespace-nowrap px-3 py-1 rounded bg-zinc-800"><Icon name="trash" /> Clear</button>
+        <!--<button on:click={() => postSave()} class="flex items-center gap-2 whitespace-nowrap px-3 py-1 rounded bg-zinc-800"><Icon name="disk" /> Save</button>-->
+        <button on:click={() => showDebug = !showDebug} class="flex ml-auto items-center gap-2 whitespace-nowrap px-3 py-1 rounded bg-zinc-800"><Icon name="activity"/> Debug</button>
         {#if queue.length > 0}
-            <p class="flex items-center gap-2 whitespace-nowrap px-3 py-1 rounded bg-zinc-800" title="{getTotalDuration()}">{queue.length} {queue.length === 1 ? "song": "songs"}</p>
+            <!-- svelte-ignore a11y-mouse-events-have-key-events -->
+            <p class="flex items-center gap-2 whitespace-nowrap px-3 py-1 rounded bg-zinc-800" on:mouseover={() => totalDuration = getTotalDuration()} title="{totalDuration}">{queue.length} {queue.length === 1 ? "song": "songs"}</p>
         {/if}
         <Debug  />
     </div>
