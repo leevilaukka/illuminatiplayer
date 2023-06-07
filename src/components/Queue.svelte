@@ -131,7 +131,7 @@
                 {/each}
             </select>
             {:else}
-            <p>Use the search bar to add a song to the queue!</p>
+            <p>Use the search bar at the top to add a song to the queue!</p>
         {/if}
     </div>
     {/if}
