@@ -1,5 +1,4 @@
 import { writable, get } from "svelte/store";
-import { getContext } from "svelte";
 
 const BASE_URL =
     // @ts-ignore
@@ -52,7 +51,7 @@ type CurrentlyPlaying = {
     playing: boolean;
     track: Track;
     progress: Progress;
-    queue: Track[];
+    queue: Queue;
     channel: unknown;
 };
 
@@ -64,6 +63,12 @@ export type Track = {
     durationMS: number;
     duration: string;
     author: string;
+};
+
+export type Queue = {
+    tracks: Track[];
+    current: Track;
+    progress: Progress;
 };
 
 const getURL = (path: string) => new URL("/api" + path, BASE_URL);
@@ -140,6 +145,35 @@ export async function getQueue() {
             Accept: "application/json",
             "Content-Type": "application/json",
         },
+    };
+    const response = await fetch(url, options);
+    return await response.json();
+}
+
+export async function getFilters() {
+    const url = getURL(`/music/${get(GUILD_ID)}/filters/`);
+    const options = {
+        method: "GET",
+        headers: {
+            Accept: "application/json",
+        },
+    };
+    const response = await fetch(url, options);
+    return await response.json();
+}
+
+export async function postFilterToggle(filter: string) {
+    const url = getURL(`/music/filters/toggle`);
+    const options = {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            filter,
+            guildID: get(GUILD_ID),
+        }),
     };
     const response = await fetch(url, options);
     return await response.json();
@@ -377,6 +411,24 @@ export async function getDiscordGuilds(token: string) {
             Accept: "application/json",
             Authorization: `Bearer ${token}`,
         },
+    };
+
+    const response = await fetch(url, options);
+    return await response.json();
+}
+
+export async function getAutoComplete(query: string) {
+    const url = getURL(`/music/autocomplete/`);
+    const options = {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            query,
+            guildID: get(GUILD_ID),
+        }),
     };
 
     const response = await fetch(url, options);

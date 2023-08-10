@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { LoopMode, postClear, postJump, postLoop, postMove, postRemove, postSave, postShuffle, postToTop, setChannelID} from "@lib/api";
+    import { LoopMode, postClear, postJump, postLoop, postMove, postRemove, postSave, postShuffle, postToTop, setChannelID, type Queue } from "@lib/api";
     import Icon from "./Icon.svelte";
     import Debug from "./Debug.svelte";
 
-    export let queue: any = []
-    export let debug: Debug = null
+    export let queue = []
+    export let debug = null
     export let voiceChannels = []
     export let playing = false;
     export let track = null;
@@ -32,7 +32,13 @@
     }
 
     const handleRepeat = () => {
-        postLoop(LoopMode.TRACK)
+        if(track.loopMode == LoopMode.OFF) {
+            postLoop(LoopMode.TRACK)
+        } else if(track.loopMode == LoopMode.TRACK) {
+            postLoop(LoopMode.QUEUE)
+        } else {
+            postLoop(LoopMode.OFF)
+        }
     }
 
     const handleChannelSelect = (e: Event) => {
@@ -43,10 +49,12 @@
     }
 
     function getTotalDuration() {
+        const { floor } = Math
+
         const seconds = queue.reduce((acc, cur) => acc + cur.durationMS, 0) / 1000
-        const minutes = Math.floor(seconds / 60)
-        const hours = Math.floor(minutes / 60)
-        const days = Math.floor(hours / 24)
+        const minutes = floor(seconds / 60)
+        const hours = floor(minutes / 60)
+        const days = floor(hours / 24)
         return `${ days > 0 ? `${days}d` : ""} ${hours > 0 ? `${hours % 24}h` : ""} ${minutes > 0 ? `${minutes % 60}m` : ""} ${seconds % 60}s`
     }
 </script>
@@ -144,7 +152,11 @@
         <button on:click={handleShuffle} title="Shuffle Queue" class="flex items-center gap-2 whitespace-nowrap px-3 py-1 rounded bg-zinc-800"><Icon name="shuffle"/> Shuffle</button>
         <button on:click={handleRepeat} class="flex items-center gap-2 whitespace-nowrap px-3 py-1 rounded bg-zinc-800"><Icon name="repeat" /> Repeat</button>
         <button on:click={() => postClear()} title="Clear Queue" class="flex items-center gap-2 whitespace-nowrap px-3 py-1 rounded bg-zinc-800"><Icon name="trash" /> Clear</button>
-        <!--<button on:click={() => postSave()} class="flex items-center gap-2 whitespace-nowrap px-3 py-1 rounded bg-zinc-800"><Icon name="disk" /> Save</button>-->
+
+        {#if queue.length > 0}
+            <button on:click={() => postSave()} class="flex items-center gap-2 whitespace-nowrap px-3 py-1 rounded bg-zinc-800"><Icon name="save" /> Save</button>
+        {/if}
+
         <button on:click={() => showDebug = !showDebug} class="flex ml-auto items-center gap-2 whitespace-nowrap px-3 py-1 rounded bg-zinc-800"><Icon name="activity"/> Debug</button>
         {#if queue.length > 0}
             <!-- svelte-ignore a11y-mouse-events-have-key-events -->

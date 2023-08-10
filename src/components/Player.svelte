@@ -6,7 +6,7 @@
     import { createEventDispatcher } from "svelte"
     import Icon from "./Icon.svelte";
     import Debug from "./Debug.svelte";
-
+    
     const dispatch = createEventDispatcher()
 
     const events = getEvents();
@@ -82,7 +82,15 @@
 
     events.addEventListener("open", () => {
         events.addEventListener("message", (event) => {
-            const data = JSON.parse(event.data)
+            type MessageData = {
+                state: "start" | "pause" | "resume" | "finish" | "add"
+                track?: any
+                time?: number
+                queue?: any[]
+                channel?: any
+                stats?: Debug
+            }
+            const data: MessageData = JSON.parse(event.data)
 
             if(data.state == "pause") {
                 playing = false
