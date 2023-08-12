@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { getAutoComplete, postSong } from "@lib/api";
+    import { getAutoComplete, postFilePlay, postSong } from "@lib/api";
     import Icon from "@components/Icon.svelte"
 
     let query = ""
@@ -7,11 +7,20 @@
     let autoCompleteShow = false
 
     const handleSearch = (e) => {
-        if(e.type == "drop") {
-            query = e.dataTransfer.getData("text/plain")
-        }
+        console.log(e.dataTransfer.files[0])
         
         e.preventDefault()
+        if(e.type == "drop") {
+            if (e.dataTransfer.files[0]) {
+                const file = e.dataTransfer.files[0] as File
+                if(!file.type.startsWith("audio/")) return alert("File must be an audio file")
+                postFilePlay(file)
+                return
+            }
+            else query = e.dataTransfer.getData("text/plain")
+        }
+        
+        
         postSong(query)
         query = ""
     }

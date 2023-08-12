@@ -218,6 +218,23 @@ export async function postSong(query: string | URL) {
     return await response.json();
 }
 
+export async function postFilePlay(file: File) {
+    const url = getURL(`/music/playfile/`);
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("guildID", get(GUILD_ID));
+    formData.append("channelID", get(CHANNEL_ID));
+
+    const options = {
+        method: "POST",
+        body: formData,
+    };
+
+    const response = await fetch(url, options);
+    return await response.json();
+}
+
 export async function postJump(index: number) {
     const url = getURL(`/music/jump/`);
     const options = {
