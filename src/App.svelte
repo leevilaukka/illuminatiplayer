@@ -11,11 +11,13 @@
     let debug = null
     let voiceChannels = []
     let playing = false
+    let lastChannel
     
     setGuildID(new URLSearchParams(window.location.search).get("guild"))
 
     getChannels().then(data => {
         voiceChannels = data.voice
+        lastChannel = data.lastUsed
     })
 
     
@@ -25,7 +27,7 @@
 <div class="grid grid-cols-[auto_30%] grid-rows-1 gap-6 grid-cols-2 p-6 h-full">
     <div class="area flex flex-col h-full p-4 gap-4">
         <Search />
-        <Queue {queue} {debug} {voiceChannels} {playing} {track}/>
+        <Queue {queue} {debug} {voiceChannels} {playing} {track} {lastChannel}/>
     </div>
     <div class="area flex flex-col h-full overflow-clip p-4 gap-4">
         {#if channel}

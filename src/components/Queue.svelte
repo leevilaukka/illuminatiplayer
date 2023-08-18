@@ -6,6 +6,7 @@
     export let queue = []
     export let debug = null
     export let voiceChannels = []
+    export let lastChannel = null
     export let playing = false;
     export let track = null;
     
@@ -130,10 +131,12 @@
     {:else}
     <div class="m-auto text-center">
         <p>The queue is empty!</p>
-        {#if !playing && !track}
+        {#if !playing && !track && lastChannel}
             <p>Select a channel below and add a song to start playing!</p>
             <select name="channel" class="w-full mt-2 p-2.5 rounded-s bg-zinc-800 block" id="" on:change={handleChannelSelect}>
-                <option value="" selected disabled>Select a channel</option>
+                <option value="" disabled>Select a channel</option>
+                <option value="{lastChannel.id}" selected>{lastChannel.name}</option>
+                <option disabled>──────────</option>
                 {#each voiceChannels as channel}
                     <option value={channel.id}>{channel.name}</option>
                 {/each}

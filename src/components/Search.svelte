@@ -6,11 +6,9 @@
     let autoComplete = []
     let autoCompleteShow = false
 
-    const handleSearch = (e) => {
-        console.log(e.dataTransfer.files[0])
-        
+    const handleSearch = (e: SubmitEvent | InputEvent | DragEvent ) => {        
         e.preventDefault()
-        if(e.type == "drop") {
+        if(e.type == "drop" && e instanceof DragEvent) {
             if (e.dataTransfer.files[0]) {
                 const file = e.dataTransfer.files[0] as File
                 if(!file.type.startsWith("audio/")) return alert("File must be an audio file")
@@ -18,8 +16,7 @@
                 return
             }
             else query = e.dataTransfer.getData("text/plain")
-        }
-        
+        } 
         
         postSong(query)
         query = ""
