@@ -1,7 +1,6 @@
 import App from "./App.svelte";
 import "./App.pcss";
 
-// @ts-ignore
-const app = new App({
+new App({
     target: document.body,
 });

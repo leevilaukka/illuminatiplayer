@@ -60,3 +60,11 @@
         @apply rounded-xl bg-zinc-900;
     }
 }
+
+.highlight-bottom {
+    @apply relative after:absolute after:-bottom-2 after:left-0 after:block after:h-2 after:w-full after:bg-emerald-600 after:content-[""];
+}
+
+.highlight-top {
+    @apply relative after:absolute after:left-0 after:-top-2 after:block after:h-2 after:w-full after:bg-emerald-600 after:content-[""];
+}

@@ -6,6 +6,7 @@
     import { createEventDispatcher } from "svelte"
     import Icon from "./Icon.svelte";
     import Debug from "./Debug.svelte";
+    import Filters from "./Filters.svelte";
     
     const dispatch = createEventDispatcher()
 
@@ -135,7 +136,7 @@
                 <button on:click={stop}><Icon name="square" /></button> 
             {:else}
                 <button on:click={skip}><Icon name="skip_forward" /></button>
-            {/if}            
+            {/if}
         </div>
         <Progress {progress}/>
     </div>

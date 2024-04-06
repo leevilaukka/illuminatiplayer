@@ -33,6 +33,7 @@
         "typescript": "^5.0.4"
     },
     "dependencies": {
+        "@discord/embedded-app-sdk": "^1.1.2",
         "discord-player": "^6.6.2"
     }
 }

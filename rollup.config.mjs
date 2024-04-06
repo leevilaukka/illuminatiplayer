@@ -73,6 +73,9 @@ export default [
                 __ENV__: PRODUCTION
                     ? JSON.stringify("PRODUCTION")
                     : JSON.stringify("DEVELOPMENT"),
+                __DISCORD_CLIENT_ID__ : PRODUCTION 
+                    ? "670016290840379411" // PROD
+                    : "729712438466838631" // DEV
             }),
 
             alias({

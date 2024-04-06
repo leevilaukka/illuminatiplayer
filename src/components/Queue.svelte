@@ -2,6 +2,7 @@
     import { LoopMode, postClear, postJump, postLoop, postMove, postRemove, postSave, postShuffle, postToTop, setChannelID, type Queue } from "@lib/api";
     import Icon from "./Icon.svelte";
     import Debug from "./Debug.svelte";
+    import Filters from "./Filters.svelte";
 
     export let queue = []
     export let debug = null
@@ -20,15 +21,31 @@
         queue = res.queue
     }
 
-    const handleDragStart = (e: DragEvent, idx: number) => {
+    const handleDragStart = (_: DragEvent, idx: number) => {
         dragFrom = idx
     }
 
-    const handleDrop = async (e: DragEvent, index: number) => {
+    const handleDragOver = (e: DragEvent & {
+        currentTarget: EventTarget & HTMLTableRowElement;
+    }, idx: number) => {
+        e.preventDefault()
+        
+        if (idx < dragFrom) {
+            e.currentTarget.classList.add("highlight-top")
+        } else e.currentTarget.classList.add("highlight-bottom")
+    }
+
+    const handleDragLeave = (e: DragEvent & {currentTarget: EventTarget & HTMLTableRowElement}) => {
+        e.preventDefault()
+
+        e.currentTarget.classList.remove("highlight-top", "highlight-bottom")
+    }
+
+    const handleDrop = async (e: DragEvent & {currentTarget: EventTarget & HTMLTableRowElement}, index: number) => {
         dragTo = index
         
         if(dragFrom == dragTo) return
-
+        e.currentTarget.classList.remove("highlight-top", "highlight-bottom")
         await postMove(dragFrom, dragTo)
     }
 
@@ -92,7 +109,7 @@
                 </thead>
                 <tbody>
                     {#each queue as track, index}
-                        <tr draggable="true" on:dragover={(e) => e.preventDefault()} on:dragstart={(e) => handleDragStart(e, index)} on:drop={(e) => handleDrop(e, index)} class="bg-zinc-800" title="{track.title} | {track.author}" >
+                        <tr draggable="true" on:dragover={(e) => handleDragOver(e, index)} on:dragleave={e => handleDragLeave(e)} on:dragstart={(e) => handleDragStart(e, index)} on:drop={(e) => handleDrop(e, index)} class="bg-zinc-800" title="{track.title} | {track.author}" >
                             <td class="text-center rounded-s">
                                 <p class="text-zinc-400">{index + 1}</p>
                             </td>
@@ -156,10 +173,12 @@
         <button on:click={handleRepeat} class="flex items-center gap-2 whitespace-nowrap px-3 py-1 rounded bg-zinc-800"><Icon name="repeat" /> Repeat</button>
         <button on:click={() => postClear()} title="Clear Queue" class="flex items-center gap-2 whitespace-nowrap px-3 py-1 rounded bg-zinc-800"><Icon name="trash" /> Clear</button>
 
+
         {#if queue.length > 0}
             <button on:click={() => postSave()} class="flex items-center gap-2 whitespace-nowrap px-3 py-1 rounded bg-zinc-800"><Icon name="save" /> Save</button>
         {/if}
-
+        
+        <Filters/>
         <button on:click={() => showDebug = !showDebug} class="flex ml-auto items-center gap-2 whitespace-nowrap px-3 py-1 rounded bg-zinc-800"><Icon name="activity"/> Debug</button>
         {#if queue.length > 0}
             <!-- svelte-ignore a11y-mouse-events-have-key-events -->
