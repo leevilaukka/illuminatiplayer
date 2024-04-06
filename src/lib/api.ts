@@ -452,3 +452,20 @@ export async function getAutoComplete(query: string) {
     const response = await fetch(url, options);
     return await response.json();
 }
+
+export async function getAccessToken(code: string) {
+    const url = getURL("/oauth/discord/activity");
+
+    const options = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            code,
+        }),
+    };
+
+    const response = await fetch(url, options)
+    return await response.json()
+}
